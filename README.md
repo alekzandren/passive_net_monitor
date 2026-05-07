@@ -35,17 +35,19 @@ pip install -r requirements.txt
 ---
 
 ## Project Structure
-
+```text
 net_traffic_analyzer/
 ├── analyzer/
-│   ├── sniffer.py         # Packet capture logic
-│   ├── parser.py          # OSI Layer analysis & DPI
-│   ├── stats_manager.py   # Thread-safe data aggregation
-│   └── utils.py           # System checks & formatting
-├── main.py                # Entry point
-├── .env                   # Configuration file
-├── .gitignore             # Git exclusion rules
-└── requirements.txt       # Project dependencies
+│   ├── __init__.py        # Package initialization
+│   ├── parser.py          # Deep Packet Inspection & OSI Layer analysis
+│   ├── sniffer.py         # Network interface interception (Scapy-based)
+│   ├── stats_manager.py   # Thread-safe data aggregation & logging
+│   └── utils.py           # System permissions & data formatting
+├── .env                   # Environment-specific configurations
+├── .gitignore             # Git exclusion patterns
+├── main.py                # Main execution entry point & UI thread
+└── requirements.txt       # Project dependencies and versions
+```
 
 ---
 
