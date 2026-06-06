@@ -9,35 +9,51 @@ class StatsManager:
         self.log_file = log_file
         self._stats = defaultdict(lambda: {"bytes": 0, "packets": 0, "protocols": set()})
         self._lock = threading.Lock()
-
-        with open(self.log_file, "w", encoding="utf-8") as f:
-            f.write(f"--- Traffic Log Started: {time.ctime()} ---\n")
+        self._file = open(self.log_file, "a+", encoding="utf-8", buffering=1)
+        self._file.seek(0, 2)
+        if self._file.tell() == 0:
+            self._file.write(f"--- Traffic Log Started: {time.ctime()} ---\n")
 
     def update(self, packet_info: Dict[str, Any]):
-        """Обновление глобальной статистики из данных парсера."""
+        """Обновление глобальной статистики и запись в лог."""
         src_ip = packet_info["src"]
         size = packet_info["size"]
         proto = packet_info["app_proto"]
-
+        
         with self._lock:
             self._stats[src_ip]["bytes"] += size
             self._stats[src_ip]["packets"] += 1
             self._stats[src_ip]["protocols"].add(proto)
-
-        self._log_to_file(packet_info)
+            self._log_to_file(packet_info)
 
     def _log_to_file(self, info: Dict[str, Any]):
-        """Запись каждой транзакции в файл."""
+        """Внутренний метод записи транзакции в удерживаемый файл."""
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         log_entry = (
             f"[{timestamp}] {info['src']} -> {info['dst']} | "
             f"Proto: {info['proto']}/{info['app_proto']} | "
             f"Size: {info['size']} bytes | Encrypted: {info['is_encrypted']}\n"
         )
-        with open(self.log_file, "a", encoding="utf-8") as f:
-            f.write(log_entry)
+        self._file.write(log_entry)
 
-    def get_snapshot(self) -> Dict:
-        """Возвращает копию текущей статистики для вывода."""
+    def get_snapshot(self) -> Dict[str, Any]:
+        """
+        Возвращает потокобезопасную копию текущей статистики для отображения в UI/CLI.
+        Преобразует set() в list() для последующей JSON-сериализации.
+        """
+        snapshot = {}
         with self._lock:
-            return dict(self._stats)
+            for ip, metrics in self._stats.items():
+                snapshot[ip] = {
+                    "bytes": metrics["bytes"],
+                    "packets": metrics["packets"],
+                    "protocols": list(metrics["protocols"])
+                }
+        return snapshot
+
+    def __del__(self):
+        """Гарантируем закрытие файла при уничтожении объекта."""
+        try:
+            self._file.close()
+        except Exception:
+            pass
