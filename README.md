@@ -1,5 +1,12 @@
 # Net_Traffic_Analyzer
 
+[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg?style=flat-square)](https://github.com/alekzandren/net_traffic_analyzer)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blueviolet.svg?style=flat-square)](https://github.com/alekzandren/net_traffic_analyzer)
+[![Category: Network Security](https://img.shields.io/badge/Category-Network%20Security-red.svg?style=flat-square)](https://github.com/alekzandren/net_traffic_analyzer)
+[![Library: Scapy](https://img.shields.io/badge/Library-Scapy-informational.svg?style=flat-square)](https://scapy.net/)
+
 A professional-grade, asynchronous passive network traffic analyzer and sniffer built with **Python 3.12** and **Scapy**. This tool provides real-time traffic monitoring, Deep Packet Inspection (DPI) at the application level, and detailed bandwidth statistics.
 
 ---
